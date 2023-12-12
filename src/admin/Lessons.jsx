@@ -11,16 +11,19 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Heading from "../components/Heading";
 import AddLessonModal from "../components/AddLessonModal";
 import { useGlobalContext } from "../contexts/AppContext";
 import ViewStudentsModal from "../components/ViewStudentsModal";
 import EditLessonModal from "../components/EditLessonModal";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SearchBox from "../components/SearchBox";
 
 const Lessons = () => {
   const { lessons, deleteLesson } = useGlobalContext();
+  const [search, setSearch] = useState("");
+
   const tutor = (img, name) => (
     <Grid container alignItems="center">
       <Grid item md={2} xs={12}>
@@ -35,17 +38,22 @@ const Lessons = () => {
   return (
     <Container maxWidth="lg" className="container">
       <Box>
-        <Grid container>
-          <Grid item md={6}>
+        <Grid container rowGap={2} alignItems="center">
+          <Grid item md={6} xs={8}>
             <Heading
-              title="Lessons"
+              title="Lesson By"
               icon={<i className="fa-solid fa-book text-dark icon" />}
             />
           </Grid>
-          <Grid item md={6} textAlign="end">
+          <Grid item md={6} xs={4} textAlign="end">
             <AddLessonModal />
           </Grid>
         </Grid>
+        <SearchBox
+          title="Lesson by Title"
+          search={search}
+          handleChange={(e) => setSearch(e.target.value)}
+        />
         <TableContainer className="mt-4 TableContainer">
           <Table>
             <TableHead>
@@ -73,51 +81,56 @@ const Lessons = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {lessons?.map((item, index) => {
-                return (
-                  <TableRow key={index}>
-                    {[
-                      `${index + 1}.`,
-                      item?.subject,
-                      item?.chapter,
-                      `${item?.title.substring(0, 22)}${
-                        item?.title.length > 22 ? "..." : ""
-                      }`,
-                      tutor(item?.teacher?.avatar, item?.teacher?.name),
-                    ].map((e, ind) => (
-                      <TableCell
-                        key={ind}
-                        className={`text-${
-                          ind === 3 || ind === 1 ? "left" : "center"
-                        } fs-6`}
-                      >
-                        {e}
+              {lessons
+                ?.filter((item) => item?.title?.toLowerCase().includes(search))
+                .map((item, index) => {
+                  return (
+                    <TableRow key={index}>
+                      {[
+                        `${index + 1}.`,
+                        item?.subject,
+                        item?.chapter,
+                        `${item?.title.substring(0, 22)}${
+                          item?.title.length > 22 ? "..." : ""
+                        }`,
+                        tutor(item?.teacher?.avatar, item?.teacher?.name),
+                      ].map((e, ind) => (
+                        <TableCell
+                          key={ind}
+                          className={`text-${
+                            ind === 3 || ind === 1 ? "left" : "center"
+                          } fs-6`}
+                        >
+                          {e}
+                        </TableCell>
+                      ))}
+                      <TableCell className="text-center">
+                        <ViewStudentsModal
+                          students={item?.students}
+                          lessonId={item?._id}
+                        />
                       </TableCell>
-                    ))}
-                    <TableCell className="text-center">
-                      <ViewStudentsModal
-                        students={item?.students}
-                        lessonId={item?._id}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Grid container spacing={2} alignItems="center">
-                        <Grid item md={6} xs={6} textAlign="end">
-                          <EditLessonModal lesson={item} lessonId={item?._id} />
+                      <TableCell>
+                        <Grid container spacing={2} alignItems="center">
+                          <Grid item md={6} xs={6} textAlign="end">
+                            <EditLessonModal
+                              lesson={item}
+                              lessonId={item?._id}
+                            />
+                          </Grid>
+                          <Grid item md={6} xs={6} textAlign="start">
+                            <DeleteIcon
+                              color="error"
+                              className="ml-2 fs-6 d-inline-block"
+                              onClick={() => deleteLesson(item?._id)}
+                              sx={{ cursor: "pointer" }}
+                            />
+                          </Grid>
                         </Grid>
-                        <Grid item md={6} xs={6} textAlign="start">
-                          <DeleteIcon
-                            color="error"
-                            className="ml-2 fs-6 d-inline-block"
-                            onClick={() => deleteLesson(item?._id)}
-                            sx={{ cursor: "pointer" }}
-                          />
-                        </Grid>
-                      </Grid>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
             </TableBody>
           </Table>
         </TableContainer>
