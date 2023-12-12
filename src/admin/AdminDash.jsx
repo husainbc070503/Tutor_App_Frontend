@@ -51,7 +51,7 @@ const AdminDash = () => {
           {data.map((item) => {
             const { title, length, icon, color, link } = item;
             return (
-              <Grid key={title} item md={6}>
+              <Grid key={title} item md={6} xs={12}>
                 <div
                   className={`dash-card shadow shadow-lg bg-${color} rounded-2 px-4 py-3 position-relative`}
                 >

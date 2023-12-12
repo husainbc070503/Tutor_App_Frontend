@@ -22,7 +22,7 @@ const Home = () => {
         ) : user?.user?.role === "student" ? (
           <StudentProfile />
         ) : (
-          <Grid container spacing={8}>
+          <Grid container spacing={8} py={4}>
             <Grid item md={5} xs={12}>
               <img src={HomeImg} alt="homeimage" className="home-img" />
             </Grid>
