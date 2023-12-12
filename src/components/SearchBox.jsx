@@ -25,7 +25,6 @@ const SearchBox = ({ title, search, handleChange }) => {
           </InputAdornment>
         }
         label={`Search ${title}`}
-        autoFocus
         placeholder="Search"
         value={search}
         onChange={handleChange}
