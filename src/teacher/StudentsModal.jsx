@@ -66,7 +66,7 @@ const StudentsModal = ({ students, teacher, lesson }) => {
               <SearchBox
                 title="Student"
                 search={search}
-                handleChange={(e) => setSearch(e.target.value)}
+                handleChange={(e) => setSearch(e.target.value.toLowerCase())}
               />
             </Grid>
           </Grid>

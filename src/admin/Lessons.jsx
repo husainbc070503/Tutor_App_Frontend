@@ -38,7 +38,7 @@ const Lessons = () => {
   return (
     <Container maxWidth="lg" className="container">
       <Box>
-        <Grid container rowGap={2} alignItems="center">
+        <Grid container rowGap={2} mb={3} alignItems="center">
           <Grid item md={6} xs={8}>
             <Heading
               title="Lesson By"
@@ -52,7 +52,7 @@ const Lessons = () => {
         <SearchBox
           title="Lesson by Title"
           search={search}
-          handleChange={(e) => setSearch(e.target.value)}
+          handleChange={(e) => setSearch(e.target.value.toLowerCase())}
         />
         <TableContainer className="mt-4 TableContainer">
           <Table>

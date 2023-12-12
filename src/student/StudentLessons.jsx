@@ -42,7 +42,7 @@ const StudentLessons = () => {
             <SearchBox
               title="Lesson by Title"
               search={search}
-              handleChange={(e) => setSearch(e.target.value)}
+              handleChange={(e) => setSearch(e.target.value.toLowerCase())}
             />
           </Grid>
         </Grid>

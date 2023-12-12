@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { useGlobalContext } from "../contexts/AppContext";
 import MultipleSelect from "./MultipleSelect";
+import SearchBox from "./SearchBox";
 
 const style = {
   position: "absolute",
@@ -41,6 +42,7 @@ const ViewStudentsModal = ({ students, lessonId }) => {
 
   const [show, setShow] = React.useState(false);
   const [addedStudents, setAddedStudents] = React.useState([]);
+  const [search, setSearch] = React.useState("");
 
   const handleSubmit = async () => {
     const arr = [...new Set(addedStudents)];
@@ -60,7 +62,7 @@ const ViewStudentsModal = ({ students, lessonId }) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Grid container justifyItems="space-between" mb={2}>
+          <Grid container justifyItems="space-between" mb={3}>
             <Grid item md={6} xs={6}>
               <Typography fontSize={20} fontWeight="bold">
                 Students List
@@ -78,6 +80,11 @@ const ViewStudentsModal = ({ students, lessonId }) => {
               )}
             </Grid>
           </Grid>
+          <SearchBox
+            title="Student"
+            search={search}
+            handleChange={(e) => setSearch(e.target.value.toLowerCase())}
+          />
           {show && (
             <Box className="my-3">
               <MultipleSelect
@@ -95,7 +102,7 @@ const ViewStudentsModal = ({ students, lessonId }) => {
               </Button>
             </Box>
           )}
-          <TableContainer>
+          <TableContainer className="mt-4">
             <Table>
               <TableHead>
                 <TableRow>
@@ -114,34 +121,36 @@ const ViewStudentsModal = ({ students, lessonId }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {students?.map((item, index) => {
-                  return (
-                    <TableRow key={index}>
-                      <TableCell className="text-center">
-                        {index + 1}.
-                      </TableCell>
-                      <TableCell>
-                        <Avatar
-                          src={item?.avatar}
-                          alt={item?.name}
-                          className="d-block mx-auto"
-                        />
-                      </TableCell>
-                      {[item?.name, item?.email].map((item, ind) => (
-                        <TableCell className="fs-6" key={ind}>
-                          {item}
+                {students
+                  ?.filter((item) => item?.name?.toLowerCase().includes(search))
+                  ?.map((item, index) => {
+                    return (
+                      <TableRow key={index}>
+                        <TableCell className="text-center">
+                          {index + 1}.
                         </TableCell>
-                      ))}
-                      <TableCell className="fs-6 text-center">
-                        <DeleteIcon
-                          color="error"
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => removeStudent(item?._id, lessonId)}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                        <TableCell>
+                          <Avatar
+                            src={item?.avatar}
+                            alt={item?.name}
+                            className="d-block mx-auto"
+                          />
+                        </TableCell>
+                        {[item?.name, item?.email].map((item, ind) => (
+                          <TableCell className="fs-6" key={ind}>
+                            {item}
+                          </TableCell>
+                        ))}
+                        <TableCell className="fs-6 text-center">
+                          <DeleteIcon
+                            color="error"
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => removeStudent(item?._id, lessonId)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           </TableContainer>
